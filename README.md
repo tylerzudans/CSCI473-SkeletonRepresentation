@@ -1,5 +1,5 @@
 # CSCI 473 - Human-Centered Robotics Project 3: Robot Understanding of Human Behaviors Using Skeleton-Based Representations
-This repository was created by Tyler Zudans for Project 3 of CSCI 473. This repository has a directory called dataset which contains text files detailing a human's joint positions in 3D space from a kinect camera. The scripts do the following:
+This repository was created by Tyler Zudans for Project 3 of CSCI 473. This repository has a directory called dataset which contains text files detailing a human's joint positions in 3D space from a kinect camera. The repository is structured as follows:
 
 **Directories**
 
@@ -24,6 +24,11 @@ From a linux terminal:
 
 1. To create rad, rad.t, hjdp, and hjpd.t files for part 2 run. These files will appear in the **representations** directory.
    1. $ `python3 skeleton_representation.py`
+
+**Algorithms**
+
+1. *RAD* -
+1. *HJDP* -
 
 **Results**
 
