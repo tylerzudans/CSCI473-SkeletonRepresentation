@@ -7,7 +7,7 @@ This repository has a directory called dataset which contains text files detaili
 **Installation**:
 From a linux terminal:
 1. Clone this repository
-   1. $ `https://github.com/tylerzudans/CSCI473-SkeletonRepresentation.git`
+   1. $ `git clone https://github.com/tylerzudans/CSCI473-SkeletonRepresentation.git`
 1. Install numpy and os with pip for python 3
    1. $ `pip3 install numpy` or $ `python3 -m pip install numpy`
    1. $ `pip3 install os` or $ `python3 -m pip install os`
