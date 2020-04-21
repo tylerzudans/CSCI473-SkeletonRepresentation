@@ -1,17 +1,73 @@
 import numpy
+import os
 
 def getAngle(a,b,c):
+    
     a = numpy.array(a)
     b = numpy.array(b)
     c = numpy.array(c)
 
+    if numpy.sum(a) == 0.0:
+        return 0
+    if numpy.sum(b) == 0.0:
+        return 0
+    if numpy.sum(c) == 0.0:
+        return 0
+
     ba = a - b
     bc = c - b
+
+    if numpy.sum(ba) == 0.0:
+        return 0
+    if numpy.sum(bc) == 0.0:
+        return 0
+
     cosine_angle = numpy.dot(ba, bc) / (numpy.linalg.norm(ba) * numpy.linalg.norm(bc))
     angle = numpy.arccos(cosine_angle)
 
     return numpy.degrees(angle)
 
+def convert_to_hjdp_from_file(file_name):
+    #read in all joints from file and put into a dictionary
+    f = open(file_name,"r")
+    relevant_joint_dictionary = {}
+    for joint_information_string in f:
+        #add relevant joints to a dictionary by frame and joint id
+        #print(joint_information_string)
+        j_info = joint_information_string.split()
+        #crash prevention
+        for i in range(5):
+            if j_info[i] == "NaN":
+                j_info[i]=1
+        j_info[0] = (int)(j_info[0])
+        j_info[1] = (int)(j_info[1])
+        j_info[2] = (float)(j_info[2])
+        j_info[3] = (float)(j_info[3])
+        j_info[4] = (float)(j_info[4])
+
+        relevant_joint_dictionary[(j_info[0],j_info[1])] = (j_info[2],j_info[3], j_info[4])
+    f.close()
+
+    #create dictionary to hold all joint values
+    relative_distance = {}
+    for i in range(2,21):#[2,20]
+        relative_distance[i]=[] #initialize dictionary
+    
+    #fill dictionary
+    for key in relevant_joint_dictionary:
+        frame = key[0]
+        joint_id = key[1]
+        if joint_id ==1:#break if measuring centroid to centroid
+            continue
+        #calculate distance
+        a = relevant_joint_dictionary[(frame,joint_id)]
+        b = relevant_joint_dictionary[(frame,1)]
+        a = numpy.array(a)
+        b = numpy.array(b)
+        dist = numpy.linalg.norm(a-b)
+        relative_distance[joint_id].append(dist)
+    return relative_distance
+        
 def convert_to_rad_from_file(file_name):
     f = open(file_name,"r")
     relevant_joint_dictionary = {} #initialize as empty dictionary will have (frame,joint) as key (x,y,z) as value
@@ -19,6 +75,10 @@ def convert_to_rad_from_file(file_name):
         #add relevant joints to a dictionary by frame and joint id
         #print(joint_information_string)
         j_info = joint_information_string.split()
+        #crash prevention
+        for i in range(5):
+            if j_info[i] == "NaN":
+                j_info[i]=1
         j_info[0] = (int)(j_info[0])
         j_info[1] = (int)(j_info[1])
         j_info[2] = (float)(j_info[2])
@@ -90,19 +150,138 @@ def get_body_part_rad(joint_id):
     }
     return part.get(joint_id,"none")
 
+def arrays_to_histograms(dist,ang,n,m,t):
+    file_line = []
+    for key in dist:
+        #file_line.append(numpy.histogram(dist[key],n)[0])
+        file_line.extend(numpy.histogram(dist[key],n)[0])
+    for key in ang:
+        file_line.extend(numpy.histogram(ang[key],m)[0])
+    #file_line = file_line/t
+    #return file_line
+    return [x*(1.0/t) for x in file_line] #return concatenated histograms adjusted for number of frames
+
+
 def main():
-    print("extracting files")
-    distances, angles = convert_to_rad_from_file("dataset/train/a08_s01_e01_skeleton_proj.txt")
-    for key in distances:
-        #print(len(distances[key]))
-        numpy.histogram(distances[key],5)
+    print("Extracting Files for RAD")
+    #RAD Training Set
+    mode="train"
+    file_name_list = os.popen("ls dataset/"+mode+"/*").read()#os.system("ls dataset/"+mode+"/*")
+    file_name_list = file_name_list.split()
+    print("There are "+str(len(file_name_list))+" files to be converted from the " + mode + " set of data")
+    print("Starting with "+ file_name_list[0])
+    print(". . .")
+    
+    output_file = open("rad","w")
+    file_count = 1
+    for file_name in file_name_list:
+        distances, angles = convert_to_rad_from_file(file_name)#convert file to two dictionaries of relevant data
+        file_histogram_concatinated = arrays_to_histograms(distances,angles,5,5,len(distances["head"])) #convert relevant data to concatinated set of histograms
+        for element in file_histogram_concatinated:
+            output_file.write(str(element)+" ")
+        output_file.write("\n")
+        if(file_count%5==0 or file_count == len(file_name_list)):
+            print(str(file_count)+":"+file_name+" Completed")
+        file_count = file_count + 1
+    output_file.close()
     print()
-    for key in angles:
-        print(len(angles[key]))
+    print()
+
+    #Rad Testing Set
+    mode="test"
+    file_name_list = os.popen("ls dataset/"+mode+"/*").read()#os.system("ls dataset/"+mode+"/*")
+    file_name_list = file_name_list.split()
+    print("There are "+str(len(file_name_list))+" files to be converted from the " + mode + " set of data")
+    print("Starting with "+ file_name_list[0])
+    print(". . .")
+    
+    output_file = open("rad.t","w")
+    file_count = 1
+    for file_name in file_name_list:
+        distances, angles = convert_to_rad_from_file(file_name)#convert file to two dictionaries of relevant data
+        file_histogram_concatinated = arrays_to_histograms(distances,angles,5,5,len(distances["head"])) #convert relevant data to concatinated set of histograms
+        for element in file_histogram_concatinated:
+            output_file.write(str(element)+" ")
+        output_file.write("\n")
+        if(file_count%5==0 or file_count == len(file_name_list)):
+            print(str(file_count)+":"+file_name+" Completed")
+        file_count = file_count + 1
+    output_file.close()  
+    print()
+    print()  
+
+
+
+    print("Extracting files for HJDP Set")
+    #HJDP Training Set
+    mode="train"
+    file_name_list = os.popen("ls dataset/"+mode+"/*").read()#os.system("ls dataset/"+mode+"/*")
+    file_name_list = file_name_list.split()
+    print("There are "+str(len(file_name_list))+" files to be converted from the " + mode + " set of data")
+    print("Starting with "+ file_name_list[0])
+    print(". . .")
+    
+    output_file = open("hjdp","w")
+    file_count = 1
+    for file_name in file_name_list:
+        distances = convert_to_hjdp_from_file(file_name)#convert file to two dictionaries of relevant data
+        file_histogram_concatinated = arrays_to_histograms(distances,{},5,1,len(distances[2])) #convert relevant data to concatinated set of histograms
+        for element in file_histogram_concatinated:
+            output_file.write(str(element)+" ")
+        output_file.write("\n")
+        if(file_count%5==0 or file_count == len(file_name_list)):
+            print(str(file_count)+":"+file_name+" Completed")
+        file_count = file_count + 1
+    output_file.close()
+    print()
+
+    #HJDP Testing Set
+    mode="test"
+    file_name_list = os.popen("ls dataset/"+mode+"/*").read()#os.system("ls dataset/"+mode+"/*")
+    file_name_list = file_name_list.split()
+    print("There are "+str(len(file_name_list))+" files to be converted from the " + mode + " set of data")
+    print("Starting with "+ file_name_list[0])
+    print(". . .")
+    
+    output_file = open("hjdp.t","w")
+    file_count = 1
+    for file_name in file_name_list:
+        distances = convert_to_hjdp_from_file(file_name)#convert file to two dictionaries of relevant data
+        file_histogram_concatinated = arrays_to_histograms(distances,{},5,1,len(distances[2])) #convert relevant data to concatinated set of histograms
+        for element in file_histogram_concatinated:
+            output_file.write(str(element)+" ")
+        output_file.write("\n")
+        if(file_count%5==0 or file_count == len(file_name_list)):
+            print(str(file_count)+":"+file_name+" Completed")
+        file_count = file_count + 1
+    output_file.close()
+    print()
+    print()
+
+
+
+
+
+    #distances, angles = convert_to_rad_from_file("dataset/train/a08_s01_e01_skeleton_proj.txt")
+    
+    #for key in distances:
+        #print(len(distances[key]))
+        #print(numpy.histogram(distances[key],5)[0])
+        #print(numpy.histogram(distances[key],5)[1])
+        #print()
+    #print()
+    #for key in angles:
+        #print(numpy.histogram(angles[key],5)[0])
+        #print(numpy.histogram(angles[key],5)[1])
+        #print()
+        #print(len(angles[key]))
         #for dist in distances[key]:
         #    print(dist)
     #print(len(distances["head"]))
     #print(len(angles["top_right"]))
+    print()
+    #histogram_1 = arrays_to_histograms(distances,angles,5,5,len(distances["head"]))
+    #print(histogram_1)
 
 if __name__ == "__main__":
         main()
