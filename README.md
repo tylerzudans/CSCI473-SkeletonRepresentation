@@ -12,6 +12,7 @@ This repository was created by Tyler Zudans for Project 3 of CSCI 473. This repo
 1. **P3-D2**
 
 **Installation**:
+
 From a linux terminal:
 1. Clone this repository
    1. $ `git clone https://github.com/tylerzudans/CSCI473-SkeletonRepresentation.git`
@@ -20,12 +21,13 @@ From a linux terminal:
    1. $ `pip3 install os` or $ `python3 -m pip install os`
 
 **Run**:
-(From linux terminal at this cloned directory)
 
+(From linux terminal at this cloned directory)
 1. To create rad, rad.t, hjdp, and hjpd.t files for part 2 run. These files will appear in the **representations** directory.
    1. $ `python3 skeleton_representation.py`
 
 **Algorithms**
+
 Histograms built using **numpy**
 1. *RAD* - RAD using neck, both wrists, and both ankles, compressed to 5 bin histograms, with little outlier removal
 1. *HJDP (a.k.a. Custom)* - HJDP with all joints, compressed to 5 bin histograms, with little outlier removal
