@@ -172,7 +172,7 @@ def main():
     print("Starting with "+ file_name_list[0])
     print(". . .")
     
-    output_file = open("rad","w")
+    output_file = open("representations/rad_d1","w")
     file_count = 1
     for file_name in file_name_list:
         distances, angles = convert_to_rad_from_file(file_name)#convert file to two dictionaries of relevant data
@@ -195,7 +195,7 @@ def main():
     print("Starting with "+ file_name_list[0])
     print(". . .")
     
-    output_file = open("rad.t","w")
+    output_file = open("representations/rad.t","w")
     file_count = 1
     for file_name in file_name_list:
         distances, angles = convert_to_rad_from_file(file_name)#convert file to two dictionaries of relevant data
@@ -221,7 +221,7 @@ def main():
     print("Starting with "+ file_name_list[0])
     print(". . .")
     
-    output_file = open("hjdp","w")
+    output_file = open("representations/hjdp","w")
     file_count = 1
     for file_name in file_name_list:
         distances = convert_to_hjdp_from_file(file_name)#convert file to two dictionaries of relevant data
@@ -243,7 +243,7 @@ def main():
     print("Starting with "+ file_name_list[0])
     print(". . .")
     
-    output_file = open("hjdp.t","w")
+    output_file = open("representations/hjdp.t","w")
     file_count = 1
     for file_name in file_name_list:
         distances = convert_to_hjdp_from_file(file_name)#convert file to two dictionaries of relevant data
