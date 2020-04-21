@@ -28,7 +28,7 @@ From a linux terminal:
 
 **Algorithms**
 
-Histograms built using **numpy**
+Compression algorithms built according to instructions from the P3-D1 instruction. Histograms built using **numpy**
 1. *RAD* - RAD using neck, both wrists, and both ankles, compressed to 5 bin histograms, with little outlier removal
 1. *HJDP (a.k.a. Custom)* - HJDP with all joints, compressed to 5 bin histograms, with little outlier removal
 
