@@ -26,9 +26,9 @@ From a linux terminal:
    1. $ `python3 skeleton_representation.py`
 
 **Algorithms**
-
-1. *RAD* -
-1. *HJDP* -
+Histograms built using **numpy**
+1. *RAD* - RAD using neck, both wrists, and both ankles, compressed to 5 bin histograms, with little outlier removal
+1. *HJDP (a.k.a. Custom)* - HJDP with all joints, compressed to 5 bin histograms, with little outlier removal
 
 **Results**
 
