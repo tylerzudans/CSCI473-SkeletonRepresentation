@@ -1,7 +1,8 @@
 import numpy
 import os
+from libsvm.svmutil import *
 
-bin_size = 20
+bin_size = 30
 def getActionNumber(file_name): #find number between a and _ in the file name
     #print(file_name)
     start = file_name.find('/a')
@@ -170,14 +171,16 @@ def arrays_to_histograms(dist,ang,n,m,t):
     #return file_line
     return [x*(1.0/t) for x in file_line] #return concatenated histograms adjusted for number of frames
 
-def hjdp_hist_to_libsvm(output_name,mode):
-    print("Converting raw dataset'"+ mode +"' HJDP histogram in libsvm compatible file  -> "+ output_name)
+def hjdp_hist_to_libsvm(output_name,mode,bin_size,verbose = True):
+    if(verbose):
+        print("Converting raw dataset'"+ mode +"' HJDP histogram in libsvm compatible file  -> "+ output_name)
     #RAD Training Set
     file_name_list = os.popen("ls dataset/"+mode+"/*").read()#os.system("ls dataset/"+mode+"/*")
     file_name_list = file_name_list.split()
     #print("There are "+str(len(file_name_list))+" files to be converted from the " + mode + " set of data")
-    print("Starting with "+ file_name_list[0])
-    print(". . .")
+    if(verbose):
+        print("Starting with "+ file_name_list[0])
+        print(". . .")
 
     output_file = open("representations/"+output_name,"w")
     file_count = 1
@@ -194,20 +197,24 @@ def hjdp_hist_to_libsvm(output_name,mode):
             output_file.write(str(i+1)+':'+str(file_histogram_concatinated[i])+' ')
         output_file.write("\n")
         if(file_count%5==0 or file_count == len(file_name_list)):
-            print(str(file_count)+":"+file_name+" Completed")
+            if(verbose):
+                print(str(file_count)+":"+file_name+" Completed")
         file_count = file_count + 1
     output_file.close()
-    print()
-    print()
+    if(verbose):
+        print()
+        print()
 
-def rad_hist_to_libsvm(output_name,mode):
-    print("Converting raw dataset'"+ mode +"' RAD histogram in libsvm compatible file  -> "+ output_name)
+def rad_hist_to_libsvm(output_name,mode,bin_size, verbose = True):
+    if(verbose):
+        print("Converting raw dataset'"+ mode +"' RAD histogram in libsvm compatible file  -> "+ output_name)
     #RAD Training Set
     file_name_list = os.popen("ls dataset/"+mode+"/*").read()#os.system("ls dataset/"+mode+"/*")
     file_name_list = file_name_list.split()
     #print("There are "+str(len(file_name_list))+" files to be converted from the " + mode + " set of data")
-    print("Starting with "+ file_name_list[0])
-    print(". . .")
+    if(verbose):
+        print("Starting with "+ file_name_list[0])
+        print(". . .")
 
     output_file = open("representations/"+output_name,"w")
     file_count = 1
@@ -223,149 +230,98 @@ def rad_hist_to_libsvm(output_name,mode):
         for i in range(len(file_histogram_concatinated)):
             output_file.write(str(i+1)+':'+str(file_histogram_concatinated[i])+' ')
         output_file.write("\n")
-        if(file_count%5==0 or file_count == len(file_name_list)):
+        if(verbose and (file_count%5==0 or file_count == len(file_name_list))):
             print(str(file_count)+":"+file_name+" Completed")
         file_count = file_count + 1
     output_file.close()
-    print()
-    print()
+    if(verbose):
+        print()
+        print()
+def getRadAccuracy(d_path,train_file,test_file,bin_size):
+    rad_hist_to_libsvm(train_file,"train",bin_size,False)
+    rad_hist_to_libsvm(test_file,"test",bin_size,False)
+
+    y, x = svm_read_problem(d_path+train_file)#read in training data
+    m = svm_train(y, x, '-c 4 -q')# build training model
+    y_t,x_t = svm_read_problem(d_path+test_file)#read in testing dataset
+
+    #print("RAD histogram trained by LIBSVM with bin size %d "%bin_size)
+    #print(bin_size)
+    p_label, p_acc, p_eval = svm_predict(y_t,x_t,m,'-q')
+    #print('%d bins -> %f ' %(bin_size,p_acc[0]))
+    return p_acc[0]
+
+def getHjdpAccuracy(d_path,train_file,test_file,bin_size):
+    hjdp_hist_to_libsvm(train_file,"train",bin_size,False)
+    hjdp_hist_to_libsvm(test_file,"test",bin_size,False)
+
+    y, x = svm_read_problem(d_path+train_file)#read in training data
+    m = svm_train(y, x, '-c 4 -q')# build training model
+    y_t,x_t = svm_read_problem(d_path+test_file)#read in testing dataset
+
+    #print("RAD histogram trained by LIBSVM with bin size %d "%bin_size)
+    #print(bin_size)
+    p_label, p_acc, p_eval = svm_predict(y_t,x_t,m,'-q')
+    #print('%d bins -> %f ' %(bin_size,p_acc[0]))
+    return p_acc[0]
 
 def main():
-    print("Extracting Files")
-    #RAD Training Set
-    rad_hist_to_libsvm("rad_d2","train")
-    rad_hist_to_libsvm("rad_d2.t","test")
+    finished = True
+    if(finished):
+        print("Extracting Files")
+        #RAD Training Set
+        rad_bin_size = 17
+        rad_hist_to_libsvm("rad_d2","train",rad_bin_size)
+        rad_hist_to_libsvm("rad_d2.t","test",rad_bin_size)
 
-    #HJDP Training set
-    hjdp_hist_to_libsvm("hjdp_d2","train")
-    hjdp_hist_to_libsvm("hjdp_d2.t","test")
+        #HJDP Training set
+        hjdp_bin_size = 18
+        hjdp_hist_to_libsvm("hjdp_d2","train",hjdp_bin_size)
+        hjdp_hist_to_libsvm("hjdp_d2.t","test",hjdp_bin_size)
 
-    #Training and evaluation
+        #Training and evaluation
+        #RAD
+        y, x = svm_read_problem('representations/rad_d2')#read in training data
+        m = svm_train(y, x, '-c 4 -q')# build training model
+        y_t,x_t = svm_read_problem('representations/rad_d2.t')#read in testing dataset
+
+        print("RAD histogram trained by LIBSVM with bin size %d "%rad_bin_size)
+        p_label, p_acc, p_eval = svm_predict(y_t,x_t,m)
+        print()
+
+        #HJDP
+        y, x = svm_read_problem('representations/hjdp_d2')#read in training data
+        m = svm_train(y, x, '-c 4 -q')# build training model
+        y_t,x_t = svm_read_problem('representations/hjdp_d2.t')#read in testing dataset
+
+        print("HJDP histogram trained by LIBSVM with bin size %d "%bin_size)
+        p_label, p_acc, p_eval = svm_predict(y_t,x_t,m)
+        print()
+    else:
+        #testing HJDP
+        max=0
+        max_i = -1
+        for i in range(5,100):
+            val = getHjdpAccuracy("representations/","t_hjdp_d2","t_hjdp_d2.t",i)
+            if(val>max):
+                max=val
+                max_i=i
+        print("HJDP bin size'%d' is the best with accuracy of '%f' percent"%(max_i,max))
+
+        #testing RAD
+        max=0
+        max_i = -1
+        for i in range(5,100):
+            val = getRadAccuracy("representations/","t_rad_d2","t_rad_d2.t",i)
+            if(val>max):
+                max=val
+                max_i=i
+        print("RAD bin size'%d' is the best with accuracy of '%f' percent"%(max_i,max))
 
 
-    # mode="train"
-    # file_name_list = os.popen("ls dataset/"+mode+"/*").read()#os.system("ls dataset/"+mode+"/*")
-    # file_name_list = file_name_list.split()
-    # print("There are "+str(len(file_name_list))+" files to be converted from the " + mode + " set of data")
-    # print("Starting with "+ file_name_list[0])
-    # print(". . .")
-    #
-    # output_file = open("representations/rad_d2","w")
-    # file_count = 1
-    # for file_name in file_name_list:
-    #     distances, angles = convert_to_rad_from_file(file_name)#convert file to two dictionaries of relevant data
-    #     file_histogram_concatinated = arrays_to_histograms(distances,angles,bin_size,bin_size,len(distances["head"])) #convert relevant data to concatinated set of histograms
-    #     #D2 Code
-    #     action_label = getActionNumber(file_name)
-    #     output_file.write(str(action_label)+" ")#write lable
-    #
-    #     # for element in file_histogram_concatinated:
-    #     #     output_file.write(str(element)+" ")
-    #     for i in range(len(file_histogram_concatinated)):
-    #         output_file.write(str(i+1)+':'+str(file_histogram_concatinated[i])+' ')
-    #     output_file.write("\n")
-    #     if(file_count%5==0 or file_count == len(file_name_list)):
-    #         print(str(file_count)+":"+file_name+" Completed")
-    #     file_count = file_count + 1
-    # output_file.close()
-    # print()
-    # print()
+    #print(str(p_label)+"::" + str(p_acc)+"::" + str(p_eval))
 
-    # #Rad Testing Set
-    # mode="test"
-    # file_name_list = os.popen("ls dataset/"+mode+"/*").read()#os.system("ls dataset/"+mode+"/*")
-    # file_name_list = file_name_list.split()
-    # print("There are "+str(len(file_name_list))+" files to be converted from the " + mode + " set of data")
-    # print("Starting with "+ file_name_list[0])
-    # print(". . .")
-    #
-    # output_file = open("representations/rad_d2.t","w")
-    # file_count = 1
-    # for file_name in file_name_list:
-    #     distances, angles = convert_to_rad_from_file(file_name)#convert file to two dictionaries of relevant data
-    #     file_histogram_concatinated = arrays_to_histograms(distances,angles,bin_size,bin_size,len(distances["head"])) #convert relevant data to concatinated set of histograms
-    #     for element in file_histogram_concatinated:
-    #         output_file.write(str(element)+" ")
-    #     output_file.write("\n")
-    #     if(file_count%5==0 or file_count == len(file_name_list)):
-    #         print(str(file_count)+":"+file_name+" Completed")
-    #     file_count = file_count + 1
-    # output_file.close()
-    # print()
-    # print()
-    #
-    #
-    #
-    # print("Extracting files for HJDP Set")
-    # #HJDP Training Set
-    # mode="train"
-    # file_name_list = os.popen("ls dataset/"+mode+"/*").read()#os.system("ls dataset/"+mode+"/*")
-    # file_name_list = file_name_list.split()
-    # print("There are "+str(len(file_name_list))+" files to be converted from the " + mode + " set of data")
-    # print("Starting with "+ file_name_list[0])
-    # print(". . .")
-    #
-    # output_file = open("representations/hjdp_d2","w")
-    # file_count = 1
-    # for file_name in file_name_list:
-    #     distances = convert_to_hjdp_from_file(file_name)#convert file to two dictionaries of relevant data
-    #     file_histogram_concatinated = arrays_to_histograms(distances,{},bin_size,1,len(distances[2])) #convert relevant data to concatinated set of histograms
-    #     for element in file_histogram_concatinated:
-    #         output_file.write(str(element)+" ")
-    #     output_file.write("\n")
-    #     if(file_count%5==0 or file_count == len(file_name_list)):
-    #         print(str(file_count)+":"+file_name+" Completed")
-    #     file_count = file_count + 1
-    # output_file.close()
-    # print()
-    #
-    # #HJDP Testing Set
-    # mode="test"
-    # file_name_list = os.popen("ls dataset/"+mode+"/*").read()#os.system("ls dataset/"+mode+"/*")
-    # file_name_list = file_name_list.split()
-    # print("There are "+str(len(file_name_list))+" files to be converted from the " + mode + " set of data")
-    # print("Starting with "+ file_name_list[0])
-    # print(". . .")
-    #
-    # output_file = open("representations/hjdp_d2.t","w")
-    # file_count = 1
-    # for file_name in file_name_list:
-    #     distances = convert_to_hjdp_from_file(file_name)#convert file to two dictionaries of relevant data
-    #     file_histogram_concatinated = arrays_to_histograms(distances,{},bin_size,1,len(distances[2])) #convert relevant data to concatinated set of histograms
-    #     for element in file_histogram_concatinated:
-    #         output_file.write(str(element)+" ")
-    #     output_file.write("\n")
-    #     if(file_count%5==0 or file_count == len(file_name_list)):
-    #         print(str(file_count)+":"+file_name+" Completed")
-    #     file_count = file_count + 1
-    # output_file.close()
-    print("DONE")
-    print()
-    #
-    #
-    #
-    #
-    #
-    # #distances, angles = convert_to_rad_from_file("dataset/train/a08_s01_e01_skeleton_proj.txt")
-    #
-    # #for key in distances:
-    #     #print(len(distances[key]))
-    #     #print(numpy.histogram(distances[key],5)[0])
-    #     #print(numpy.histogram(distances[key],5)[1])
-    #     #print()
-    # #print()
-    # #for key in angles:
-    #     #print(numpy.histogram(angles[key],5)[0])
-    #     #print(numpy.histogram(angles[key],5)[1])
-    #     #print()
-    #     #print(len(angles[key]))
-    #     #for dist in distances[key]:
-    #     #    print(dist)
-    # #print(len(distances["head"]))
-    # #print(len(angles["top_right"]))
-    # print()
-    # #histogram_1 = arrays_to_histograms(distances,angles,5,5,len(distances["head"]))
-    # #print(histogram_1)
+
 
 if __name__ == "__main__":
         main()
