@@ -32,11 +32,13 @@ Prediction files exist in the representations folder with the extenstion .predic
 From a linux terminal:
 1. Clone this repository
    1. $ `git clone https://github.com/tylerzudans/CSCI473-SkeletonRepresentation.git`
-1. Install **numpy** and **os** with pip for python 3
+1. Install used libraries with pip for python 3
    1. $ `pip3 install numpy` or $ `python3 -m pip install numpy`
    1. $ `pip3 install os` or $ `python3 -m pip install os`
    1. $ `pip3 install libsvm` or $ `python3 -m pip install libsvm`
    1. $ `pip3 install pandas` or $ `python3 -m pip install pandas`
+   1. $ `pip3 install -U scikit-learn`
+   
    
 **Run**:
 
@@ -58,4 +60,4 @@ Compression algorithms built according to instructions from the P3-D1 instructio
 
 1. [LIBSVM Python API](https://github.com/cjlin1/libsvm/tree/master/python)
 1. [LIBSVM PyPI Installation](https://pypi.org/project/libsvm/)
-1.
+1. [Confusion Matrix](https://tatwan.github.io/How-To-Plot-A-Confusion-Matrix-In-Python/)
