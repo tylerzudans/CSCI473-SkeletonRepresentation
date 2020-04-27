@@ -3,14 +3,14 @@ This repository was created by Tyler Zudans for Project 3 of CSCI 473. This repo
 
 **D2 Results**
 
-*RAD Accuracy* 56.25%
-*RAD C* 2
-*RAD Gamma* 0.5
+*RAD Accuracy 56.25%
+*RAD C 2
+*RAD Gamma 0.5
 17 bins used
 
-*HJDP Accuracy* 68.75%
-*HJDP C* 2
-*HJDP Gamma* 0.5
+*HJDP Accuracy 68.75%
+*HJDP C 2
+*HJDP Gamma 0.5
 18 bins used
 
 Prediction files exist in the representations folder with the extenstion .prediction
@@ -23,7 +23,7 @@ Prediction files exist in the representations folder with the extenstion .predic
 **Scripts**
 
 1. **|P3-D1|** The python script [skeleton_representation.py](https://github.com/tylerzudans/CSCI473-SkeletonRepresentation/blob/master/skeleton_representation.py) iterates through the dataset and converts them into a training and test file (e.g. rad_d1.t) for the RAD and HJDP compressions of the dataset as detailed in the assignment.
-1. **P3-D2**
+1. **|P3-D2|** The python script [skeleton_representation.py](https://github.com/tylerzudans/CSCI473-SkeletonRepresentation/blob/master/skeleton_representation.py) iterates through the dataset and converts them into a training and test file (e.g. rad_d1.t) for the RAD and HJDP compressions of the dataset as detailed in the assignment. This script converts differently from the last one in that is is LIBSVM compatible. After converting, this script will use the traing data to train a support vector machine (SVM) and tests its accuracy. Finally it writes its label predictions to a file with the .prediction extension.
 
 **Installation**:
 
@@ -33,6 +33,7 @@ From a linux terminal:
 1. Install **numpy** and **os** with pip for python 3
    1. $ `pip3 install numpy` or $ `python3 -m pip install numpy`
    1. $ `pip3 install os` or $ `python3 -m pip install os`
+   1. $ `pip3 install libsvm` or $ `python3 -m pip install libsvm`
 
 **Run**:
 
@@ -46,7 +47,6 @@ Compression algorithms built according to instructions from the P3-D1 instructio
 1. *RAD* - RAD using neck, both wrists, and both ankles, compressed to 5 bin histograms, with little outlier removal
 1. *HJDP (a.k.a. Custom)* - HJDP with all joints, compressed to 5 bin histograms, with little outlier removal
 
-**Results**
 
 
 **Tutorials Used**
