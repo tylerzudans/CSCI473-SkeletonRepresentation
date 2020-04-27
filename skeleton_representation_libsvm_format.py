@@ -283,7 +283,8 @@ def main():
         #Training and evaluation
         #RAD
         y, x = svm_read_problem('representations/rad_d2')#read in training data
-        m = svm_train(y, x, '-c 4 -q')# build training model
+        #m = svm_train(y, x, '-c 4 -q')# build training model
+        m = svm_train(y, x, '-c 2 -g 0.5 -q')# build training model
         y_t,x_t = svm_read_problem('representations/rad_d2.t')#read in testing dataset
 
         print("RAD histogram trained by LIBSVM with bin size %d "%rad_bin_size)
@@ -303,7 +304,7 @@ def main():
 
         #HJDP
         y, x = svm_read_problem('representations/hjdp_d2')#read in training data
-        m = svm_train(y, x, '-c 4 -q')# build training model
+        m = svm_train(y, x, '-c 2 -g 0.5 -q')# build training model
         y_t,x_t = svm_read_problem('representations/hjdp_d2.t')#read in testing dataset
 
         print("HJDP histogram trained by LIBSVM with bin size %d "%hjdp_bin_size)
