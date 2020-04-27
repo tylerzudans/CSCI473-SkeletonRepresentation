@@ -36,7 +36,8 @@ From a linux terminal:
    1. $ `pip3 install numpy` or $ `python3 -m pip install numpy`
    1. $ `pip3 install os` or $ `python3 -m pip install os`
    1. $ `pip3 install libsvm` or $ `python3 -m pip install libsvm`
-
+   1. $ `pip3 install pandas` or $ `python3 -m pip install pandas`
+   
 **Run**:
 
 (From linux terminal at this cloned directory)
