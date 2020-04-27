@@ -296,7 +296,7 @@ def main():
         y_predicted = p_label
 
         #Output prediction
-        f = open("representations/rad_d2.prediction","w")
+        f = open("representations/rad_d2.predict","w")
         for element in y_predicted:
             f.write("%d\n"%element)
         f.close();
@@ -316,7 +316,7 @@ def main():
         y_predicted = p_label
 
         #Output prediction
-        f = open("representations/hjdp_d2.prediction","w")
+        f = open("representations/hjdp_d2.predict","w")
         for element in y_predicted:
             f.write("%d\n"%element)
         f.close();
