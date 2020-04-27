@@ -1,6 +1,7 @@
 import numpy
 import os
 from libsvm.svmutil import *
+#from sklearn.metrics import confusion_matrix
 
 bin_size = 30
 def getActionNumber(file_name): #find number between a and _ in the file name
@@ -289,14 +290,35 @@ def main():
         p_label, p_acc, p_eval = svm_predict(y_t,x_t,m)
         print()
 
+        #confusion_matrix
+        y_test = y
+        y_predicted = p_label
+
+        #Output prediction
+        f = open("representations/rad_d2.prediction","w")
+        for element in y_predicted:
+            f.write("%d\n"%element)
+        f.close();
+        #cm = confusion_matrix(y_test, y_predicted)
+
         #HJDP
         y, x = svm_read_problem('representations/hjdp_d2')#read in training data
         m = svm_train(y, x, '-c 4 -q')# build training model
         y_t,x_t = svm_read_problem('representations/hjdp_d2.t')#read in testing dataset
 
-        print("HJDP histogram trained by LIBSVM with bin size %d "%bin_size)
+        print("HJDP histogram trained by LIBSVM with bin size %d "%hjdp_bin_size)
         p_label, p_acc, p_eval = svm_predict(y_t,x_t,m)
         print()
+
+        #confusion_matrix
+        y_test = y
+        y_predicted = p_label
+
+        #Output prediction
+        f = open("representations/hjdp_d2.prediction","w")
+        for element in y_predicted:
+            f.write("%d\n"%element)
+        f.close();
     else:
         #testing HJDP
         max=0
