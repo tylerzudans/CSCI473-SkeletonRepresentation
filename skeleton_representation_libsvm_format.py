@@ -301,7 +301,9 @@ def main():
         f = open("confusion/rad_d2.confusion","w")
         f.write(str(cm))
         f.close();
-        #print(cm)
+        print("RAD Confusion Matrix")
+        print(cm)
+        print()
 
         #Output prediction
         f = open("predictions/rad_d2.predict","w")
@@ -326,6 +328,9 @@ def main():
         f = open("confusion/hjdp_d2.confusion","w")
         f.write(str(cm))
         f.close();
+        print("HJDP Confusion Matrix")
+        print(cm)
+        print()
 
         #Output prediction
         f = open("predictions/hjdp_d2.predict","w")
