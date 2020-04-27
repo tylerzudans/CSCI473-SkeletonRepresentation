@@ -1,5 +1,5 @@
 # CSCI 473 - Human-Centered Robotics Project 3: Robot Understanding of Human Behaviors Using Skeleton-Based Representations
-This repository was created by Tyler Zudans for Project 3 of CSCI 473. This repository has a directory called dataset which contains text files detailing a human's joint positions in 3D space from a kinect camera. The repository is structured as follows:
+This repository was created by Tyler Zudans for Project 3 of CSCI 473. This repository has a directory called dataset which contains text files detailing a human's joint positions in 3D space from a kinect camera. 
 
 **D2 Results**
 
@@ -20,28 +20,35 @@ Prediction files exist in the representations folder with the extenstion .predic
 **Directories**
 
 1. *dataset* - contains testing and training raw data of skeleton representations pulled from a connected structured light depth camera
-1. *representations* - contains compressed/custom files (such as rad_d1.t) built from histogram representations of the data in *dataset*. It also contains the *prediction files* 
+1. *representations* - contains compressed/custom files (such as rad_d1.t) built from histogram representations of the data in *dataset*. 
+1. *predictions* - holds label predictions from the SVM
+1. *graphs* - holds grid.py generated graphs of SVM in the form of images
+1. *confusion* - holds confusion matrices genrated from testing the SVM
+
+
 
 **Scripts**
 
 1. **|P3-D1|** *(Deprecated)* The python script [skeleton_representation.py](https://github.com/tylerzudans/CSCI473-SkeletonRepresentation/blob/master/skeleton_representation.py) iterates through the dataset and converts them into a training and test file (e.g. rad_d1.t) for the RAD and HJDP compressions of the dataset as detailed in the assignment.
-1. **|P3-D2|** The python script [skeleton_representation_libsvm_format.py](https://github.com/tylerzudans/CSCI473-SkeletonRepresentation/blob/master/skeleton_representation_libsvm_format.py) iterates through the dataset and converts them into a training and test file (e.g. rad_d1.t) for the RAD and HJDP compressions of the dataset as detailed in the assignment. This script converts differently from the last one in that is is LIBSVM compatible. After converting, this script will use the traing data to train a support vector machine (SVM) and tests its accuracy. Finally it writes its label predictions to a file with the .predict extension in the representation directory.
+1. **|P3-D2|** The python script [skeleton_representation_libsvm_format.py](https://github.com/tylerzudans/CSCI473-SkeletonRepresentation/blob/master/skeleton_representation_libsvm_format.py) iterates through the dataset and converts them into a training and test file (e.g. rad_d1.t) for the RAD and HJDP compressions of the dataset as detailed in the assignment. This script converts differently from the last one in that is is LIBSVM compatible. After converting, this script will use the traing data to train a support vector machine (SVM) and tests its accuracy. Finally it writes its label predictions to a file with the .predict extension and confusion matrices with the extension .confusion.
 
 **Installation**:
 
 From a linux terminal:
 1. Clone this repository
    1. $ `git clone https://github.com/tylerzudans/CSCI473-SkeletonRepresentation.git`
-1. Install **numpy** and **os** with pip for python 3
+1. Install used libraries with pip for python 3
    1. $ `pip3 install numpy` or $ `python3 -m pip install numpy`
    1. $ `pip3 install os` or $ `python3 -m pip install os`
    1. $ `pip3 install libsvm` or $ `python3 -m pip install libsvm`
    1. $ `pip3 install pandas` or $ `python3 -m pip install pandas`
+   1. $ `pip3 install -U scikit-learn`
+   
    
 **Run**:
 
 (From linux terminal at this cloned directory)
-1. This script will create rad, rad.t, hjdp, and hjpd.t libsvm data representation files, train their respective support vector machines, and test their accuracy. *.predict* files will be generated in the representations folder.
+1. This script will create rad, rad.t, hjdp, and hjpd.t libsvm data representation files, train their respective support vector machines, and test their accuracy. Predict and confusion matrix files are generated.
    1. $ `python3 skeleton_representation_libsvm_format.py`
 1. *(Deprecated)* To create rad, rad.t, hjdp, and hjpd.t files for part 1 run. These files will appear in the **representations** directory.
    1. $ `python3 skeleton_representation.py`
@@ -58,4 +65,4 @@ Compression algorithms built according to instructions from the P3-D1 instructio
 
 1. [LIBSVM Python API](https://github.com/cjlin1/libsvm/tree/master/python)
 1. [LIBSVM PyPI Installation](https://pypi.org/project/libsvm/)
-1.
+1. [Confusion Matrix](https://tatwan.github.io/How-To-Plot-A-Confusion-Matrix-In-Python/)
