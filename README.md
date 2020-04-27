@@ -24,7 +24,7 @@ Prediction files exist in the representations folder with the extenstion .predic
 
 **Scripts**
 
-1. **|P3-D1|** (Deprecated) The python script [skeleton_representation.py](https://github.com/tylerzudans/CSCI473-SkeletonRepresentation/blob/master/skeleton_representation.py) iterates through the dataset and converts them into a training and test file (e.g. rad_d1.t) for the RAD and HJDP compressions of the dataset as detailed in the assignment.
+1. **|P3-D1|** *(Deprecated)* The python script [skeleton_representation.py](https://github.com/tylerzudans/CSCI473-SkeletonRepresentation/blob/master/skeleton_representation.py) iterates through the dataset and converts them into a training and test file (e.g. rad_d1.t) for the RAD and HJDP compressions of the dataset as detailed in the assignment.
 1. **|P3-D2|** The python script [skeleton_representation_libsvm_format.py](https://github.com/tylerzudans/CSCI473-SkeletonRepresentation/blob/master/skeleton_representation_libsvm_format.py) iterates through the dataset and converts them into a training and test file (e.g. rad_d1.t) for the RAD and HJDP compressions of the dataset as detailed in the assignment. This script converts differently from the last one in that is is LIBSVM compatible. After converting, this script will use the traing data to train a support vector machine (SVM) and tests its accuracy. Finally it writes its label predictions to a file with the .predict extension in the representation directory.
 
 **Installation**:
@@ -42,7 +42,7 @@ From a linux terminal:
 (From linux terminal at this cloned directory)
 1. This script will create rad, rad.t, hjdp, and hjpd.t libsvm data representation files, train their respective support vector machines, and test their accuracy. *.predict* files will be generated in the representations folder.
    1. $ `python3 skeleton_representation_libsvm_format.py`
-1. (Deprecated) To create rad, rad.t, hjdp, and hjpd.t files for part 1 run. These files will appear in the **representations** directory.
+1. *(Deprecated)* To create rad, rad.t, hjdp, and hjpd.t files for part 1 run. These files will appear in the **representations** directory.
    1. $ `python3 skeleton_representation.py`
 
 **Algorithms**
@@ -55,5 +55,6 @@ Compression algorithms built according to instructions from the P3-D1 instructio
 
 **Tutorials Used**
 
-1. 
+1. [LIBSVM Python API](https://github.com/cjlin1/libsvm/tree/master/python)
+1. [LIBSVM PyPI Installation](https://pypi.org/project/libsvm/)
 1.
