@@ -1,6 +1,9 @@
 import numpy
 import os
 from libsvm.svmutil import *
+#import numpy as np
+import pandas as pd
+from sklearn.metrics import confusion_matrix
 #from sklearn.metrics import confusion_matrix
 
 bin_size = 30
@@ -292,11 +295,16 @@ def main():
         print()
 
         #confusion_matrix
-        y_test = y
+        y_test = y_t
         y_predicted = p_label
+        cm = confusion_matrix(y_test, y_predicted)
+        f = open("confusion/rad_d2.confusion","w")
+        f.write(str(cm))
+        f.close();
+        #print(cm)
 
         #Output prediction
-        f = open("representations/rad_d2.predict","w")
+        f = open("predictions/rad_d2.predict","w")
         for element in y_predicted:
             f.write("%d\n"%element)
         f.close();
@@ -312,11 +320,15 @@ def main():
         print()
 
         #confusion_matrix
-        y_test = y
+        y_test = y_t
         y_predicted = p_label
+        cm = confusion_matrix(y_test, y_predicted)
+        f = open("confusion/hjdp_d2.confusion","w")
+        f.write(str(cm))
+        f.close();
 
         #Output prediction
-        f = open("representations/hjdp_d2.predict","w")
+        f = open("predictions/hjdp_d2.predict","w")
         for element in y_predicted:
             f.write("%d\n"%element)
         f.close();
