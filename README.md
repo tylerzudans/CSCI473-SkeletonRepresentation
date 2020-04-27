@@ -3,15 +3,16 @@ This repository was created by Tyler Zudans for Project 3 of CSCI 473. This repo
 
 **D2 Results**
 
-*RAD Algorithm*
+*RAD Algorithm Implementation*
 * Accuracy = 56.25%
 * C = 2
 * Gamma = 0.5
 * 17 bins used
 
-* HJDP Accuracy 68.75%
-* HJDP C 2
-* HJDP Gamma 0.5
+*HJDP Algorithm Implementation*
+* Accuracy = 68.75%
+* C = 2
+* Gamma = 0.5
 * 18 bins used
 
 Prediction files exist in the representations folder with the extenstion .prediction
