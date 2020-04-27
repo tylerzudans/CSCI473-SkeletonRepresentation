@@ -1,10 +1,24 @@
 # CSCI 473 - Human-Centered Robotics Project 3: Robot Understanding of Human Behaviors Using Skeleton-Based Representations
 This repository was created by Tyler Zudans for Project 3 of CSCI 473. This repository has a directory called dataset which contains text files detailing a human's joint positions in 3D space from a kinect camera. The repository is structured as follows:
 
+**D2 Results**
+
+*RAD Accuracy* 56.25%
+*RAD C* 2
+*RAD Gamma* 0.5
+17 bins used
+
+*HJDP Accuracy* 68.75%
+*HJDP C* 2
+*HJDP Gamma* 0.5
+18 bins used
+
+Prediction files exist in the representations folder with the extenstion .prediction
+
 **Directories**
 
 1. *dataset* - contains testing and training raw data of skeleton representations pulled from a connected structured light depth camera
-1. *representations* - contains compressed/custom files (such as rad_d1.t) built from histogram representations of the data in *dataset*
+1. *representations* - contains compressed/custom files (such as rad_d1.t) built from histogram representations of the data in *dataset*. It also contains the *prediction files* 
 
 **Scripts**
 
